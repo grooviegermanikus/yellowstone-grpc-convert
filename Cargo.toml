@@ -1,6 +1,7 @@
 [package]
 name = "yellowstone-grpc-convert"
-version = "0.1.0"
+# align with proto-vX.Y.Z
+version = "12.2.0"
 edition = "2021"
 license = "AGPL-3.0"
 description = "Bidirectional conversion between Solana SDK types and yellowstone-grpc protobuf types"

@@ -3491,7 +3491,7 @@ dependencies = [
 
 [[package]]
 name = "yellowstone-grpc-convert"
-version = "0.1.0"
+version = "12.2.0"
 dependencies = [
  "bincode",
  "solana-account",
