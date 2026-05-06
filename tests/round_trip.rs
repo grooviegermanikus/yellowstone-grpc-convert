@@ -76,3 +76,38 @@ fn round_trip_rewards_obj() {
     assert_eq!(rewards, decoded.rewards);
     assert_eq!(num_partitions, decoded.num_partitions);
 }
+
+#[test]
+fn error_create_pubkey_wrong_length() {
+    let short_bytes: &[u8] = &[1, 2, 3];
+    let result = convert_from::create_pubkey(short_bytes);
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "failed to parse Pubkey");
+}
+
+#[test]
+fn error_create_tx_error_corrupt_bincode() {
+    use yellowstone_grpc_proto::prelude as proto;
+    let bad_error = proto::TransactionError {
+        err: vec![0xFF, 0xFF, 0xFF],
+    };
+    let result = convert_from::create_tx_error(Some(&bad_error));
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "failed to decode TransactionError");
+}
+
+#[test]
+fn error_create_message_missing_header() {
+    use yellowstone_grpc_proto::prelude as proto;
+    let msg = proto::Message {
+        header: None,
+        account_keys: vec![],
+        recent_blockhash: vec![0u8; 32],
+        instructions: vec![],
+        versioned: false,
+        address_table_lookups: vec![],
+    };
+    let result = convert_from::create_message(msg);
+    assert!(result.is_err());
+    assert_eq!(result.unwrap_err(), "failed to get MessageHeader");
+}
